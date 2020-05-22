@@ -153,12 +153,10 @@ export default {
     },
 
     modificar(row) { 
-      const empty = [] // Esto es para ver si el usuario subio una imagen nueva, si no sube una no hace nada
+      const empty = [] //para comparar si el usuario subio una imagen nueva
 
-      if(JSON.stringify(this.imagen) != JSON.stringify(empty)){
+      if(JSON.stringify(this.imagen) != JSON.stringify(empty)){// Esto es para ver si el usuario subio una imagen nueva, si no sube una no hace nada
         this.form.imagen = this.imagen.name;
-
-        console.log(this.form.instrumento);
 
         const formData = new FormData();
 
@@ -192,8 +190,9 @@ export default {
             "cantidadVendida": this.form.cantidadVendida,
             "descripcion": this.form.descripcion
         }).then(res => {
-          console.log(res);
-          this.success();
+          console.log(res.data);
+          const msg = 'Los datos se subieron exitosamente';
+          this.success(msg);
           
         })
       console.log(this.instrumentosData);
@@ -216,9 +215,9 @@ export default {
       })
     },
 
-    success() { // pop up de que se subio exitosamente
+    success(msg) { // pop up de que se subio exitosamente
       this.boxTwo = ''
-      this.$bvModal.msgBoxOk('Los datos se subieron exitosamente', {
+      this.$bvModal.msgBoxOk(msg, {
         title: 'Confirmacion',
         size: 'sm',
         buttonSize: 'sm',
@@ -248,12 +247,12 @@ export default {
 
       eliminar(row){ 
         this.confirmar = ''
-        this.$bvModal.msgBoxConfirm('Please confirm that you want to delete everything.', {
-          title: 'Please Confirm',
+        this.$bvModal.msgBoxConfirm('Estas seguro que quieres eliminar este producto?', {
+          title: 'Confirmar',
           size: 'sm',
           buttonSize: 'sm',
           okVariant: 'danger',
-          okTitle: 'YES',
+          okTitle: 'SI',
           cancelTitle: 'NO',
           footerClass: 'p-2',
           hideHeaderClose: false,
@@ -265,6 +264,8 @@ export default {
             if(this.confirmar){
               axios.delete(`http://localhost:9001/api/v1/instrumentos/`+row.item.id)
             }
+            const msg = 'Se borro exitosamente';
+            this.success(msg);
           })
           .catch(err => {
             console.log(err)
